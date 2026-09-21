@@ -505,14 +505,17 @@ const themeSelect = document.getElementById("themeSelect");
 const rootElement = document.documentElement;
 
 function applyTheme(theme) {
+	let resolvedTheme = theme;
 	if (theme === "system") {
 		const prefersDark = window.matchMedia(
 			"(prefers-color-scheme: dark)",
 		).matches;
-		rootElement.setAttribute("data-theme", prefersDark ? "dark" : "light");
+		resolvedTheme = prefersDark ? "dark" : "light";
 	} else {
-		rootElement.setAttribute("data-theme", theme);
+		resolvedTheme = theme;
 	}
+	rootElement.setAttribute("data-theme", resolvedTheme);
+	rootElement.style.colorScheme = resolvedTheme;
 	localStorage.setItem("line-boil-theme", theme);
 }
 
@@ -528,10 +531,9 @@ window
 	.matchMedia("(prefers-color-scheme: dark)")
 	.addEventListener("change", (e) => {
 		if (themeSelect.value === "system") {
-			rootElement.setAttribute(
-				"data-theme",
-				e.matches ? "dark" : "light",
-			);
+			const resolvedTheme = e.matches ? "dark" : "light";
+			rootElement.setAttribute("data-theme", resolvedTheme);
+			rootElement.style.colorScheme = resolvedTheme;
 		}
 	});
 // --- FIN GESTIÓN DE TEMA ---
