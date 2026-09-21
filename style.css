@@ -2,9 +2,9 @@
     color-scheme: light;
     --bg: #e8edf2;
     --card-bg: #ffffff;
-    --accent: #2457d6;
-    --accent-hover: #1945b3;
-    --highlight: #087f73;
+    --accent: #60a5fa;
+    --accent-hover: #3b82f6;
+    --highlight: #2dd4bf;
     --text: #1e293b;
     --text-dim: #64748b;
     --input-bg: #f3f6f8;
@@ -42,7 +42,7 @@ body {
 
 .app-layout {
     display: grid;
-    grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+    grid-template-columns: minmax(260px, 400px) minmax(0, 1fr);
     min-height: 100vh;
 }
 
