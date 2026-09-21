@@ -16,7 +16,11 @@
 				<aside class="settings-panel">
 					<div class="app-header">
 						<h1>Line Boil Studio</h1>
-						<select id="themeSelect" class="theme-control" aria-label="Tema de la aplicación">
+						<select
+							id="themeSelect"
+							class="theme-control"
+							aria-label="Tema de la aplicación"
+						>
 							<option value="system">💻 Sistema</option>
 							<option value="light">☀️ Claro</option>
 							<option value="dark">🌙 Oscuro</option>
@@ -24,10 +28,10 @@
 					</div>
 
 					<div class="setting-group">
-						<label for="imageInput"
-							>Imagen Entrada (PNG con transparencia
-							recomendado)</label
-						>
+						<label for="imageInput">Imagen Entrada</label>
+						<p class="setting-help">
+							PNG con transparencia recomendado.
+						</p>
 						<input
 							type="file"
 							id="imageInput"
@@ -38,7 +42,9 @@
 					<div class="setting-group">
 						<label for="maxAmplitude"
 							>Max Amplitud
-							<span class="setting-range">[0.1 - 10.0]</span></label
+							<span class="setting-range"
+								>[0.1 - 10.0]</span
+							></label
 						>
 						<p class="setting-help">
 							Qué tan lejos se desplaza cada pixel de su posición
@@ -57,7 +63,9 @@
 					<div class="setting-group">
 						<label for="frequency"
 							>Frecuencia
-							<span class="setting-range">[0.001 - 0.5]</span></label
+							<span class="setting-range"
+								>[0.001 - 0.5]</span
+							></label
 						>
 						<p class="setting-help">
 							Qué tan rápido oscila la onda a lo largo de la
@@ -76,7 +84,9 @@
 					<div class="setting-group">
 						<label for="phaseJump"
 							>Salto de Fase
-							<span class="setting-range">[0.1 - 10.0]</span></label
+							<span class="setting-range"
+								>[0.1 - 10.0]</span
+							></label
 						>
 						<p class="setting-help">
 							Cuánto avanza la fase de la onda de un frame al
@@ -95,7 +105,9 @@
 					<div class="setting-group">
 						<label for="sobelWeight"
 							>Peso Sobel
-							<span class="setting-range">[0.1 - 5.0]</span></label
+							<span class="setting-range"
+								>[0.1 - 5.0]</span
+							></label
 						>
 						<p class="setting-help">
 							Qué tanto se concentra el desplazamiento en los
@@ -111,7 +123,9 @@
 						/>
 					</div>
 
-					<button class="reset-button" id="resetBtn">Restaurar</button>
+					<button class="reset-button" id="resetBtn">
+						Restaurar
+					</button>
 				</aside>
 
 				<main class="workspace">
@@ -171,7 +185,9 @@
 						</div>
 
 						<div class="option-control">
-							<label for="transparentBgToggle">Transparencia</label>
+							<label for="transparentBgToggle"
+								>Transparencia</label
+							>
 							<div class="checkbox-control">
 								<input
 									type="checkbox"
