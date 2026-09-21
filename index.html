@@ -11,20 +11,20 @@
 		<link rel="stylesheet" href="style.css" />
 	</head>
 	<body>
-		<div class="container">
-			<div class="layout">
-				<div class="controls">
-					<div class="header-bar">
+		<div class="app-shell">
+			<div class="app-layout">
+				<aside class="settings-panel">
+					<div class="app-header">
 						<h1>Line Boil Studio</h1>
-						<select id="themeSelect" class="theme-select">
+						<select id="themeSelect" class="theme-control" aria-label="Tema de la aplicación">
 							<option value="system">💻 Sistema</option>
 							<option value="light">☀️ Claro</option>
 							<option value="dark">🌙 Oscuro</option>
 						</select>
 					</div>
 
-					<div class="control-group">
-						<label
+					<div class="setting-group">
+						<label for="imageInput"
 							>Imagen Entrada (PNG con transparencia
 							recomendado)</label
 						>
@@ -35,12 +35,12 @@
 						/>
 					</div>
 
-					<div class="control-group">
-						<label
+					<div class="setting-group">
+						<label for="maxAmplitude"
 							>Max Amplitud
-							<span class="limits">[0.1 - 10.0]</span></label
+							<span class="setting-range">[0.1 - 10.0]</span></label
 						>
-						<p class="control-desc">
+						<p class="setting-help">
 							Qué tan lejos se desplaza cada pixel de su posición
 							original.
 						</p>
@@ -54,12 +54,12 @@
 						/>
 					</div>
 
-					<div class="control-group">
-						<label
+					<div class="setting-group">
+						<label for="frequency"
 							>Frecuencia
-							<span class="limits">[0.001 - 0.5]</span></label
+							<span class="setting-range">[0.001 - 0.5]</span></label
 						>
-						<p class="control-desc">
+						<p class="setting-help">
 							Qué tan rápido oscila la onda a lo largo de la
 							imagen.
 						</p>
@@ -73,12 +73,12 @@
 						/>
 					</div>
 
-					<div class="control-group">
-						<label
+					<div class="setting-group">
+						<label for="phaseJump"
 							>Salto de Fase
-							<span class="limits">[0.1 - 10.0]</span></label
+							<span class="setting-range">[0.1 - 10.0]</span></label
 						>
-						<p class="control-desc">
+						<p class="setting-help">
 							Cuánto avanza la fase de la onda de un frame al
 							siguiente.
 						</p>
@@ -92,12 +92,12 @@
 						/>
 					</div>
 
-					<div class="control-group">
-						<label
+					<div class="setting-group">
+						<label for="sobelWeight"
 							>Peso Sobel
-							<span class="limits">[0.1 - 5.0]</span></label
+							<span class="setting-range">[0.1 - 5.0]</span></label
 						>
-						<p class="control-desc">
+						<p class="setting-help">
 							Qué tanto se concentra el desplazamiento en los
 							bordes detectados (líneas y contornos).
 						</p>
@@ -111,32 +111,32 @@
 						/>
 					</div>
 
-					<button class="btn-reset" id="resetBtn">Restaurar</button>
-				</div>
+					<button class="reset-button" id="resetBtn">Restaurar</button>
+				</aside>
 
-				<div class="canvas-column">
-					<div class="canvas-row">
-						<div class="original-box">
+				<main class="workspace">
+					<div class="canvas-grid">
+						<section class="canvas-panel">
 							<h3>Original</h3>
 							<canvas
 								id="originalCanvas"
 								width="300"
 								height="300"
 							></canvas>
-						</div>
+						</section>
 
-						<div class="preview-box">
+						<section class="canvas-panel">
 							<h3>Previsualizacion</h3>
 							<canvas
 								id="previewCanvas"
 								width="300"
 								height="300"
 							></canvas>
-						</div>
+						</section>
 					</div>
 
-					<div class="options-row">
-						<div class="option-item">
+					<div class="export-options">
+						<div class="option-control">
 							<label for="numFrames">Frames (2-30)</label>
 							<input
 								type="number"
@@ -145,10 +145,10 @@
 								min="1"
 								max="30"
 								step="1"
-								style="height: 2.2rem"
+								class="option-input"
 							/>
 						</div>
-						<div class="option-item">
+						<div class="option-control">
 							<label for="fpsInput">FPS</label>
 							<input
 								type="number"
@@ -157,11 +157,11 @@
 								min="1"
 								max="60"
 								step="1"
-								style="height: 2.2rem"
+								class="option-input"
 							/>
 						</div>
 
-						<div class="option-item">
+						<div class="option-control">
 							<label for="canvasBgColor">Color de fondo</label>
 							<input
 								type="color"
@@ -170,48 +170,38 @@
 							/>
 						</div>
 
-						<div class="option-item">
-							<label>Transparencia</label>
-							<div class="toggle-row" style="height: 2.2rem">
+						<div class="option-control">
+							<label for="transparentBgToggle">Transparencia</label>
+							<div class="checkbox-control">
 								<input
 									type="checkbox"
 									id="transparentBgToggle"
 									checked
-									style="
-										width: 1.1rem;
-										height: 1.1rem;
-										cursor: pointer;
-									"
+									class="checkbox-input"
 								/>
-								<span
-									style="
-										font-size: 0.8rem;
-										color: var(--text);
-									"
-									>Activa</span
-								>
+								<span>Activa</span>
 							</div>
 						</div>
 
-						<div class="option-item">
-							<label>Reproduccion</label>
-							<button class="btn-play" id="playPauseBtn">
+						<div class="option-control">
+							<label for="playPauseBtn">Reproducción</label>
+							<button class="playback-button" id="playPauseBtn">
 								Reproducir
 							</button>
 						</div>
 					</div>
 
-					<div class="btn-container">
-						<button class="btn-primary" id="zipBtn">
+					<div class="action-bar">
+						<button class="action-button" id="zipBtn">
 							Descargar ZIP
 						</button>
-						<button class="btn-primary" id="gifBtn">
+						<button class="action-button" id="gifBtn">
 							Descargar GIF
 						</button>
 					</div>
 
 					<div id="status"></div>
-				</div>
+				</main>
 			</div>
 		</div>
 

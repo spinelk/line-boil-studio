@@ -35,24 +35,24 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 
-.container {
+.app-shell {
     width: 100%;
     min-height: 100vh;
 }
 
-.layout {
+.app-layout {
     display: grid;
     grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
     min-height: 100vh;
 }
 
-.controls {
+.settings-panel {
     background: var(--card-bg);
     border-right: 1px solid var(--border);
     padding: 2rem clamp(1.25rem, 3vw, 2.5rem);
 }
 
-.header-bar {
+.app-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -69,7 +69,7 @@ h1 {
     letter-spacing: -0.5px;
 }
 
-.theme-select {
+.theme-control {
     background: var(--input-bg);
     color: var(--text);
     border: 1px solid var(--border);
@@ -81,11 +81,11 @@ h1 {
     outline: none;
 }
 
-.theme-select:focus {
+.theme-control:focus {
     border-color: var(--accent);
 }
 
-.control-group {
+.setting-group {
     margin-bottom: 1.2rem;
     display: flex;
     flex-direction: column;
@@ -98,14 +98,14 @@ label {
     color: var(--text);
 }
 
-.limits {
+.setting-range {
     font-weight: normal;
     font-size: 0.8rem;
     color: var(--text-dim);
     margin-left: 0.4rem;
 }
 
-.control-desc {
+.setting-help {
     font-size: 0.8rem;
     color: var(--text-dim);
     margin-top: 0.2rem;
@@ -113,8 +113,9 @@ label {
     line-height: 1.4;
 }
 
-input[type="number"],
-input[type="file"] {
+.setting-group input[type="number"],
+.setting-group input[type="file"],
+.option-control input[type="number"] {
     background: var(--input-bg);
     border: 1px solid var(--border);
     color: var(--text);
@@ -126,8 +127,9 @@ input[type="file"] {
     font-weight: 600;
 }
 
-input[type="number"]:focus,
-input[type="file"]:focus {
+.setting-group input[type="number"]:focus,
+.setting-group input[type="file"]:focus,
+.option-control input[type="number"]:focus {
     border-color: var(--accent);
 }
 
@@ -145,18 +147,18 @@ button:active {
     transform: scale(0.98);
 }
 
-.btn-reset {
+.reset-button {
     background: var(--input-bg);
     color: var(--text);
     border: 1px solid var(--border);
     width: 100%;
 }
 
-.btn-reset:hover {
+.reset-button:hover {
     background: var(--border);
 }
 
-.canvas-column {
+.workspace {
     display: flex;
     flex-direction: column;
     gap: 2rem;
@@ -164,7 +166,7 @@ button:active {
     padding: 2rem clamp(1.25rem, 4vw, 4rem) 2.5rem;
 }
 
-.canvas-row {
+.canvas-grid {
     display: flex;
     gap: clamp(1rem, 3vw, 3rem);
     justify-content: center;
@@ -172,8 +174,7 @@ button:active {
     flex: 1;
 }
 
-.original-box,
-.preview-box {
+.canvas-panel {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -182,8 +183,7 @@ button:active {
     min-width: 0;
 }
 
-.original-box h3,
-.preview-box h3 {
+.canvas-panel h3 {
     color: var(--text-dim);
     font-size: 0.95rem;
     font-weight: 700;
@@ -198,7 +198,7 @@ canvas {
     background-color: transparent;
 }
 
-.options-row {
+.export-options {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 1rem;
@@ -212,14 +212,14 @@ canvas {
     padding: 1rem 0;
 }
 
-.option-item {
+.option-control {
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
     min-width: 0;
 }
 
-.option-item label {
+.option-control label {
     font-size: 0.78rem;
     margin-bottom: 0;
     white-space: nowrap;
@@ -227,7 +227,7 @@ canvas {
     text-overflow: ellipsis;
 }
 
-.toggle-row {
+.checkbox-control {
     display: flex;
     align-items: center;
     gap: 0.4rem;
@@ -243,12 +243,27 @@ input[type="color"] {
     cursor: pointer;
 }
 
+.option-input {
+    height: 2.2rem;
+}
+
+.checkbox-input {
+    width: 1.1rem;
+    height: 1.1rem;
+    cursor: pointer;
+}
+
+.checkbox-control span {
+    color: var(--text);
+    font-size: 0.8rem;
+}
+
 input[type="color"]:disabled {
     opacity: 0.3;
     cursor: not-allowed;
 }
 
-.btn-play {
+.playback-button {
     background: var(--highlight);
     color: #ffffff;
     width: 100%;
@@ -260,11 +275,11 @@ input[type="color"]:disabled {
     justify-content: center;
 }
 
-.btn-play:hover {
+.playback-button:hover {
     opacity: 0.9;
 }
 
-.btn-container {
+.action-bar {
     display: flex;
     gap: 1rem;
     align-self: center;
@@ -272,13 +287,13 @@ input[type="color"]:disabled {
     max-width: 960px;
 }
 
-.btn-primary {
+.action-button {
     background: var(--accent);
     color: #ffffff;
     flex: 2;
 }
 
-.btn-primary:hover {
+.action-button:hover {
     background: var(--accent-hover);
 }
 
@@ -291,18 +306,18 @@ input[type="color"]:disabled {
 }
 
 @media (max-width: 1100px) {
-    .options-row {
+    .export-options {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
 @media (max-width: 900px) {
-    .layout {
+    .app-layout {
         grid-template-columns: 1fr;
         min-height: auto;
     }
 
-    .controls {
+    .settings-panel {
         border-right: 0;
         border-bottom: 1px solid var(--border);
     }
@@ -310,17 +325,17 @@ input[type="color"]:disabled {
 
 @media (max-width: 650px) {
 
-    .controls,
-    .canvas-column {
+    .settings-panel,
+    .workspace {
         padding: 1.25rem;
     }
 
-    .canvas-row {
+    .canvas-grid {
         flex-direction: column;
         align-items: stretch;
     }
 
-    .options-row {
+    .export-options {
         grid-template-columns: repeat(2, 1fr);
     }
 }
