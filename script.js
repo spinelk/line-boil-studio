@@ -193,10 +193,28 @@ function sampleBilinear(pixels, width, height, fx, fy) {
 	const idx11 = (y1 * width + x1) * 4;
 
 	const result = [0, 0, 0, 0];
-	for (let c = 0; c < 4; c++) {
-		const top = pixels[idx00 + c] * (1 - tx) + pixels[idx10 + c] * tx;
-		const bottom = pixels[idx01 + c] * (1 - tx) + pixels[idx11 + c] * tx;
-		result[c] = top * (1 - ty) + bottom * ty;
+	const weights = [
+		(1 - tx) * (1 - ty),
+		tx * (1 - ty),
+		(1 - tx) * ty,
+		tx * ty,
+	];
+	const indexes = [idx00, idx10, idx01, idx11];
+	let alpha = 0;
+
+	for (let i = 0; i < indexes.length; i++) {
+		const pixelAlpha = pixels[indexes[i] + 3] / 255;
+		alpha += pixelAlpha * weights[i];
+		result[0] += pixels[indexes[i]] * pixelAlpha * weights[i];
+		result[1] += pixels[indexes[i] + 1] * pixelAlpha * weights[i];
+		result[2] += pixels[indexes[i] + 2] * pixelAlpha * weights[i];
+	}
+
+	result[3] = alpha * 255;
+	if (alpha > 0) {
+		result[0] /= alpha;
+		result[1] /= alpha;
+		result[2] /= alpha;
 	}
 	return result;
 }
@@ -234,12 +252,16 @@ function renderBoilFrame(
 			const weightY = Math.pow(absGy / totalGrad, sobelWeight);
 
 			const waveX =
-				amplitude * Math.sin(2 * Math.PI * y * frequency + phase);
+				amplitude *
+				Math.sin(2 * Math.PI * y * frequency + phase) *
+				(0.65 + 0.35 * weightX);
 			const waveY =
-				amplitude * Math.cos(2 * Math.PI * x * frequency + phase);
+				amplitude *
+				Math.cos(2 * Math.PI * x * frequency + phase) *
+				(0.65 + 0.35 * weightY);
 
-			const srcX = clamp(x + waveX * weightX, 0, w - 1);
-			const srcY = clamp(y + waveY * weightY, 0, h - 1);
+			const srcX = clamp(x + waveX, 0, w - 1);
+			const srcY = clamp(y + waveY, 0, h - 1);
 
 			const [r, g, b, a] = sampleBilinear(src, w, h, srcX, srcY);
 			const outIdx = (y * w + x) * 4;
