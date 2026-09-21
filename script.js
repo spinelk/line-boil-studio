@@ -365,11 +365,6 @@ document.getElementById("gifBtn").addEventListener("click", () => {
 	const isTransparent = transparentBgToggle.checked;
 	const bgColorHex = canvasBgColorInput.value;
 
-	// Parse matte color (selected background color) for semi-transparent edge blending
-	const matteR = parseInt(bgColorHex.substring(1, 3), 16);
-	const matteG = parseInt(bgColorHex.substring(3, 5), 16);
-	const matteB = parseInt(bgColorHex.substring(5, 7), 16);
-
 	// Initialize gif.js
 	// We use pure Magenta (0xFF00FF) as our chroma key for fully transparent pixels
 	const gif = new GIF({
@@ -390,19 +385,19 @@ document.getElementById("gifBtn").addEventListener("click", () => {
 		if (isTransparent) {
 			const outData = tCtx.createImageData(tempCanvas.width, tempCanvas.height);
 			for (let i = 0; i < frameData.data.length; i += 4) {
-				const a = frameData.data[i + 3] / 255;
+				const alpha = frameData.data[i + 3];
 
-				if (a === 0) {
-					// Full transparency -> chroma key color
+				// GIF transparency is binary, so do not blend edge pixels with the
+				// selected background color before applying the transparency key.
+				if (alpha < 128) {
 					outData.data[i] = 255;
 					outData.data[i + 1] = 0;
 					outData.data[i + 2] = 255;
-					outData.data[i + 3] = 255; // Alpha must be opaque for NeuQuant to process it
+					outData.data[i + 3] = 255;
 				} else {
-					// Blend partial transparency with matte color
-					let r = Math.round(frameData.data[i] * a + matteR * (1 - a));
-					let g = Math.round(frameData.data[i + 1] * a + matteG * (1 - a));
-					let b = Math.round(frameData.data[i + 2] * a + matteB * (1 - a));
+					let r = frameData.data[i];
+					let g = frameData.data[i + 1];
+					let b = frameData.data[i + 2];
 
 					// Prevent accidental transparency on naturally pure magenta pixels
 					if (r === 255 && g === 0 && b === 255) {
