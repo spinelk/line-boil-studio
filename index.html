@@ -20,20 +20,34 @@
 				<aside class="settings-panel">
 					<div class="app-header">
 						<h1>Line Boil Studio</h1>
-						<select
-							id="themeSelect"
-							class="theme-control"
-							aria-label="Tema de la aplicación"
-						>
-							<option value="system">💻 Sistema</option>
-							<option value="light">☀️ Claro</option>
-							<option value="dark">🌙 Oscuro</option>
-						</select>
+						<div class="header-controls">
+							<select
+								id="languageSelect"
+								class="theme-control"
+								aria-label="Idioma de la aplicación"
+							>
+								<option value="es">Español</option>
+								<option value="en">English</option>
+							</select>
+							<select
+								id="themeSelect"
+								class="theme-control"
+								aria-label="Tema de la aplicación"
+							>
+								<option value="system">Sistema</option>
+								<option value="light">Claro</option>
+								<option value="dark">Oscuro</option>
+							</select>
+						</div>
 					</div>
 
 					<div class="setting-group">
-						<label for="imageInput">Imagen Entrada</label>
-						<p class="setting-help">
+						<label for="imageInput">
+							<span data-i18n="imageInputLabel"
+								>Imagen Entrada</span
+							>
+						</label>
+						<p class="setting-help" data-i18n="imageHelp">
 							PNG con transparencia recomendado.
 						</p>
 						<input
@@ -44,13 +58,13 @@
 					</div>
 
 					<div class="setting-group">
-						<label for="maxAmplitude"
-							>Max Amplitud
-							<span class="setting-range"
-								>[0.1 - 10.0]</span
-							></label
-						>
-						<p class="setting-help">
+						<label for="maxAmplitude">
+							<span data-i18n="maxAmplitudeLabel"
+								>Max Amplitud</span
+							>
+							<span class="setting-range">[0.1 - 10.0]</span>
+						</label>
+						<p class="setting-help" data-i18n="maxAmplitudeHelp">
 							Qué tan lejos se desplaza cada pixel de su posición
 							original.
 						</p>
@@ -65,13 +79,11 @@
 					</div>
 
 					<div class="setting-group">
-						<label for="frequency"
-							>Frecuencia
-							<span class="setting-range"
-								>[0.001 - 0.5]</span
-							></label
-						>
-						<p class="setting-help">
+						<label for="frequency">
+							<span data-i18n="frequencyLabel">Frecuencia</span>
+							<span class="setting-range">[0.001 - 0.5]</span>
+						</label>
+						<p class="setting-help" data-i18n="frequencyHelp">
 							Qué tan rápido oscila la onda a lo largo de la
 							imagen.
 						</p>
@@ -86,13 +98,13 @@
 					</div>
 
 					<div class="setting-group">
-						<label for="phaseJump"
-							>Salto de Fase
-							<span class="setting-range"
-								>[0.1 - 10.0]</span
-							></label
-						>
-						<p class="setting-help">
+						<label for="phaseJump">
+							<span data-i18n="phaseJumpLabel"
+								>Salto de Fase</span
+							>
+							<span class="setting-range">[0.1 - 10.0]</span>
+						</label>
+						<p class="setting-help" data-i18n="phaseJumpHelp">
 							Cuánto avanza la fase de la onda de un frame al
 							siguiente.
 						</p>
@@ -107,13 +119,11 @@
 					</div>
 
 					<div class="setting-group">
-						<label for="sobelWeight"
-							>Peso Sobel
-							<span class="setting-range"
-								>[0.1 - 5.0]</span
-							></label
-						>
-						<p class="setting-help">
+						<label for="sobelWeight">
+							<span data-i18n="sobelWeightLabel">Peso Sobel</span>
+							<span class="setting-range">[0.1 - 5.0]</span>
+						</label>
+						<p class="setting-help" data-i18n="sobelWeightHelp">
 							Qué tanto se concentra el desplazamiento en los
 							bordes detectados (líneas y contornos).
 						</p>
@@ -127,7 +137,11 @@
 						/>
 					</div>
 
-					<button class="reset-button" id="resetBtn">
+					<button
+						class="reset-button"
+						id="resetBtn"
+						data-i18n="resetBtn"
+					>
 						Restaurar
 					</button>
 				</aside>
@@ -135,7 +149,7 @@
 				<main class="workspace">
 					<div class="canvas-grid">
 						<section class="canvas-panel">
-							<h3>Original</h3>
+							<h3 data-i18n="originalLabel">Original</h3>
 							<canvas
 								id="originalCanvas"
 								width="300"
@@ -144,7 +158,7 @@
 						</section>
 
 						<section class="canvas-panel">
-							<h3>Previsualizacion</h3>
+							<h3 data-i18n="previewLabel">Previsualización</h3>
 							<canvas
 								id="previewCanvas"
 								width="300"
@@ -155,7 +169,11 @@
 
 					<div class="export-options">
 						<div class="option-control">
-							<label for="numFrames">Frames (2-30)</label>
+							<label for="numFrames"
+								><span data-i18n="numFramesLabel"
+									>Frames (2-30)</span
+								></label
+							>
 							<input
 								type="number"
 								id="numFrames"
@@ -167,7 +185,9 @@
 							/>
 						</div>
 						<div class="option-control">
-							<label for="fpsInput">FPS</label>
+							<label for="fpsInput"
+								><span data-i18n="fpsLabel">FPS</span></label
+							>
 							<input
 								type="number"
 								id="fpsInput"
@@ -180,7 +200,11 @@
 						</div>
 
 						<div class="option-control">
-							<label for="canvasBgColor">Color de fondo</label>
+							<label for="canvasBgColor"
+								><span data-i18n="canvasBgColorLabel"
+									>Color de fondo</span
+								></label
+							>
 							<input
 								type="color"
 								id="canvasBgColor"
@@ -190,7 +214,9 @@
 
 						<div class="option-control">
 							<label for="transparentBgToggle"
-								>Transparencia</label
+								><span data-i18n="transparencyLabel"
+									>Transparencia</span
+								></label
 							>
 							<div class="checkbox-control">
 								<input
@@ -199,23 +225,41 @@
 									checked
 									class="checkbox-input"
 								/>
-								<span>Activa</span>
+								<span data-i18n="transparentToggleText"
+									>Activa</span
+								>
 							</div>
 						</div>
 
 						<div class="option-control">
-							<label for="playPauseBtn">Reproducción</label>
-							<button class="playback-button" id="playPauseBtn">
+							<label for="playPauseBtn"
+								><span data-i18n="playbackLabel"
+									>Reproducción</span
+								></label
+							>
+							<button
+								class="playback-button"
+								id="playPauseBtn"
+								data-i18n="playButton"
+							>
 								Reproducir
 							</button>
 						</div>
 					</div>
 
 					<div class="action-bar">
-						<button class="action-button" id="zipBtn">
+						<button
+							class="action-button"
+							id="zipBtn"
+							data-i18n="downloadZipBtn"
+						>
 							Descargar ZIP
 						</button>
-						<button class="action-button" id="gifBtn">
+						<button
+							class="action-button"
+							id="gifBtn"
+							data-i18n="downloadGifBtn"
+						>
 							Descargar GIF
 						</button>
 					</div>

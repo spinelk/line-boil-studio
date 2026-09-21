@@ -8,7 +8,91 @@ fetch("https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.worker.js")
 	})
 	.catch((err) => console.error("Error loading gif worker:", err));
 
-// Default control values for resets
+const translations = {
+	es: {
+		themeSystem: "Sistema",
+		themeLight: "Claro",
+		themeDark: "Oscuro",
+		languageLabel: "Idioma de la aplicación",
+		themeLabel: "Tema de la aplicación",
+		imageInputLabel: "Imagen Entrada",
+		imageHelp: "PNG con transparencia recomendado.",
+		maxAmplitudeLabel: "Max Amplitud",
+		maxAmplitudeHelp:
+			"Qué tan lejos se desplaza cada pixel de su posición original.",
+		frequencyLabel: "Frecuencia",
+		frequencyHelp: "Qué tan rápido oscila la onda a lo largo de la imagen.",
+		phaseJumpLabel: "Salto de Fase",
+		phaseJumpHelp:
+			"Cuánto avanza la fase de la onda de un frame al siguiente.",
+		sobelWeightLabel: "Peso Sobel",
+		sobelWeightHelp:
+			"Qué tanto se concentra el desplazamiento en los bordes detectados (líneas y contornos).",
+		resetBtn: "Restaurar",
+		originalLabel: "Original",
+		previewLabel: "Previsualización",
+		numFramesLabel: "Frames (2-30)",
+		fpsLabel: "FPS",
+		canvasBgColorLabel: "Color de fondo",
+		transparencyLabel: "Transparencia",
+		transparentToggleText: "Activa",
+		playbackLabel: "Reproducción",
+		playButton: "Reproducir",
+		pauseButton: "Pausar",
+		downloadZipBtn: "Descargar ZIP",
+		downloadGifBtn: "Descargar GIF",
+		uploadImageFirst: "Sube una imagen primero.",
+		loadingGif:
+			"El motor de GIF aún se está cargando. Intenta en unos segundos.",
+		creatingZip: "Creando archivo ZIP...",
+		zipSuccess: "¡ZIP descargado con éxito!",
+		creatingGif: "Creando archivo GIF...",
+		gifProgress: "Renderizando GIF: ",
+		gifSuccess: "¡GIF descargado con éxito!",
+	},
+	en: {
+		themeSystem: "System",
+		themeLight: "Light",
+		themeDark: "Dark",
+		languageLabel: "Application language",
+		themeLabel: "Application theme",
+		imageInputLabel: "Input Image",
+		imageHelp: "PNG with transparency is recommended.",
+		maxAmplitudeLabel: "Max Amplitude",
+		maxAmplitudeHelp:
+			"How far each pixel moves from its original position.",
+		frequencyLabel: "Frequency",
+		frequencyHelp: "How quickly the wave oscillates across the image.",
+		phaseJumpLabel: "Phase Jump",
+		phaseJumpHelp:
+			"How much the wave phase advances from one frame to the next.",
+		sobelWeightLabel: "Sobel Weight",
+		sobelWeightHelp:
+			"How strongly the displacement is concentrated on detected edges (lines and contours).",
+		resetBtn: "Reset",
+		originalLabel: "Original",
+		previewLabel: "Preview",
+		numFramesLabel: "Frames (2-30)",
+		fpsLabel: "FPS",
+		canvasBgColorLabel: "Background color",
+		transparencyLabel: "Transparency",
+		transparentToggleText: "On",
+		playbackLabel: "Playback",
+		playButton: "Play",
+		pauseButton: "Pause",
+		downloadZipBtn: "Download ZIP",
+		downloadGifBtn: "Download GIF",
+		uploadImageFirst: "Upload an image first.",
+		loadingGif:
+			"The GIF engine is still loading. Please try again in a few seconds.",
+		creatingZip: "Creating ZIP file...",
+		zipSuccess: "ZIP downloaded successfully!",
+		creatingGif: "Creating GIF file...",
+		gifProgress: "Rendering GIF: ",
+		gifSuccess: "GIF downloaded successfully!",
+	},
+};
+
 const DEFAULT_VALUES = {
 	numFrames: 6,
 	maxAmplitude: 1.5,
@@ -22,6 +106,7 @@ let generatedFrames = [];
 let isPlaying = false;
 let currentPreviewFrame = 0;
 let animationInterval = null;
+let currentLanguage = localStorage.getItem("line-boil-language") || "es";
 
 const originalCanvas = document.getElementById("originalCanvas");
 const originalCtx = originalCanvas.getContext("2d");
@@ -32,6 +117,8 @@ const canvasBgColorInput = document.getElementById("canvasBgColor");
 const transparentBgToggle = document.getElementById("transparentBgToggle");
 const playPauseBtn = document.getElementById("playPauseBtn");
 const fpsInput = document.getElementById("fpsInput");
+const languageSelect = document.getElementById("languageSelect");
+const themeSelect = document.getElementById("themeSelect");
 
 const inputs = {
 	imageInput: document.getElementById("imageInput"),
@@ -49,6 +136,46 @@ function updateTransparencyState() {
 	canvasBgColorInput.disabled = isTransparent;
 	redrawCanvases();
 }
+
+function updatePlaybackButtonText() {
+	playPauseBtn.textContent = isPlaying
+		? translations[currentLanguage].pauseButton
+		: translations[currentLanguage].playButton;
+}
+
+function updateThemeOptionsText() {
+	const dictionary = translations[currentLanguage];
+	const themeLabels = {
+		system: dictionary.themeSystem,
+		light: dictionary.themeLight,
+		dark: dictionary.themeDark,
+	};
+
+	Array.from(themeSelect.options).forEach((option) => {
+		option.textContent = themeLabels[option.value];
+	});
+}
+
+function applyLanguage(lang) {
+	currentLanguage = lang;
+	document.documentElement.lang = lang;
+	localStorage.setItem("line-boil-language", lang);
+	languageSelect.value = lang;
+
+	const dictionary = translations[lang];
+	document.querySelectorAll("[data-i18n]").forEach((element) => {
+		if (dictionary[element.dataset.i18n]) {
+			element.textContent = dictionary[element.dataset.i18n];
+		}
+	});
+
+	updateThemeOptionsText();
+	updatePlaybackButtonText();
+}
+
+languageSelect.addEventListener("change", (event) => {
+	applyLanguage(event.target.value);
+});
 
 transparentBgToggle.addEventListener("change", updateTransparencyState);
 
@@ -95,7 +222,6 @@ function redrawCanvases() {
 		tempCanvas.width = previewCanvas.width;
 		tempCanvas.height = previewCanvas.height;
 
-		// Prevent crash if numFrames was reduced while playing
 		if (currentPreviewFrame >= generatedFrames.length) {
 			currentPreviewFrame = 0;
 		}
@@ -124,7 +250,6 @@ inputs.imageInput.addEventListener("change", (e) => {
 			updateTransparencyState();
 			updateAllFrames();
 
-			// Auto-play when a new image is loaded
 			if (!isPlaying && generatedFrames.length > 0) {
 				startPreview();
 			}
@@ -227,8 +352,8 @@ function renderBoilFrame(
 	sobelWeight,
 	targetCtx,
 ) {
-	const w = img.width,
-		h = img.height;
+	const w = img.width;
+	const h = img.height;
 	const srcCanvas = document.createElement("canvas");
 	srcCanvas.width = w;
 	srcCanvas.height = h;
@@ -244,8 +369,8 @@ function renderBoilFrame(
 	for (let y = 1; y < h - 1; y++) {
 		for (let x = 1; x < w - 1; x++) {
 			const { gx, gy } = sobelGradient(gray, w, x, y);
-			const absGx = Math.abs(gx),
-				absGy = Math.abs(gy);
+			const absGx = Math.abs(gx);
+			const absGy = Math.abs(gy);
 			const totalGrad = absGx + absGy + 1e-5;
 
 			const weightX = Math.pow(absGx / totalGrad, sobelWeight);
@@ -304,7 +429,6 @@ function updateAllFrames() {
 		phase += phaseJump;
 	}
 
-	// Ensure currentPreviewFrame is valid if numFrames was reduced
 	if (currentPreviewFrame >= generatedFrames.length) {
 		currentPreviewFrame = 0;
 	}
@@ -324,7 +448,7 @@ playPauseBtn.addEventListener("click", () => {
 function startPreview() {
 	if (isPlaying) clearInterval(animationInterval);
 	isPlaying = true;
-	playPauseBtn.innerText = "Pausar";
+	updatePlaybackButtonText();
 	let fps = parseInt(fpsInput.value, 10);
 	if (isNaN(fps) || fps <= 0) fps = 12;
 	const intervalMs = 1000 / fps;
@@ -338,7 +462,7 @@ function startPreview() {
 
 function stopPreview() {
 	isPlaying = false;
-	playPauseBtn.innerText = "Reproducir";
+	updatePlaybackButtonText();
 	clearInterval(animationInterval);
 }
 
@@ -351,11 +475,11 @@ fpsInput.addEventListener("input", () => {
 
 document.getElementById("zipBtn").addEventListener("click", async () => {
 	if (!loadedImage || generatedFrames.length === 0) {
-		alert("Sube una imagen primero.");
+		alert(translations[currentLanguage].uploadImageFirst);
 		return;
 	}
 
-	statusEl.innerText = "Creando archivo ZIP...";
+	statusEl.innerText = translations[currentLanguage].creatingZip;
 	const zip = new JSZip();
 	const tempCanvas = document.createElement("canvas");
 	tempCanvas.width = loadedImage.width;
@@ -392,33 +516,27 @@ document.getElementById("zipBtn").addEventListener("click", async () => {
 	link.download = "line_boil_frames.zip";
 	link.click();
 
-	statusEl.innerText = "¡ZIP descargado con exito!";
+	statusEl.innerText = translations[currentLanguage].zipSuccess;
 });
 
-// --- GIF EXPORT LOGIC ---
 document.getElementById("gifBtn").addEventListener("click", () => {
 	if (!loadedImage || generatedFrames.length === 0) {
-		alert("Sube una imagen primero.");
+		alert(translations[currentLanguage].uploadImageFirst);
 		return;
 	}
 
 	if (!gifWorkerBlobUrl) {
-		alert(
-			"El motor de GIF aún se está cargando. Intenta en unos segundos.",
-		);
+		alert(translations[currentLanguage].loadingGif);
 		return;
 	}
 
-	statusEl.innerText = "Creando archivo GIF...";
+	statusEl.innerText = translations[currentLanguage].creatingGif;
 
 	let fps = parseInt(fpsInput.value, 10);
 	if (isNaN(fps) || fps <= 0) fps = 12;
 
 	const isTransparent = transparentBgToggle.checked;
 	const bgColorHex = canvasBgColorInput.value;
-
-	// Initialize gif.js
-	// We use pure Magenta (0xFF00FF) as our chroma key for fully transparent pixels
 	const gif = new GIF({
 		workers: 2,
 		quality: 10,
@@ -441,9 +559,6 @@ document.getElementById("gifBtn").addEventListener("click", () => {
 			);
 			for (let i = 0; i < frameData.data.length; i += 4) {
 				const alpha = frameData.data[i + 3];
-
-				// GIF transparency is binary, so do not blend edge pixels with the
-				// selected background color before applying the transparency key.
 				if (alpha < 128) {
 					outData.data[i] = 255;
 					outData.data[i + 1] = 0;
@@ -453,12 +568,9 @@ document.getElementById("gifBtn").addEventListener("click", () => {
 					let r = frameData.data[i];
 					let g = frameData.data[i + 1];
 					let b = frameData.data[i + 2];
-
-					// Prevent accidental transparency on naturally pure magenta pixels
 					if (r === 255 && g === 0 && b === 255) {
 						b = 254;
 					}
-
 					outData.data[i] = r;
 					outData.data[i + 1] = g;
 					outData.data[i + 2] = b;
@@ -467,7 +579,6 @@ document.getElementById("gifBtn").addEventListener("click", () => {
 			}
 			tCtx.putImageData(outData, 0, 0);
 		} else {
-			// If no transparency, just paint the solid background color
 			tCtx.fillStyle = bgColorHex;
 			tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
 
@@ -475,7 +586,6 @@ document.getElementById("gifBtn").addEventListener("click", () => {
 			frameCanvas.width = tempCanvas.width;
 			frameCanvas.height = tempCanvas.height;
 			frameCanvas.getContext("2d").putImageData(frameData, 0, 0);
-
 			tCtx.drawImage(frameCanvas, 0, 0);
 		}
 
@@ -483,7 +593,7 @@ document.getElementById("gifBtn").addEventListener("click", () => {
 	});
 
 	gif.on("progress", function (p) {
-		statusEl.innerText = `Renderizando GIF: ${Math.round(p * 100)}%`;
+		statusEl.innerText = `${translations[currentLanguage].gifProgress}${Math.round(p * 100)}%`;
 	});
 
 	gif.on("finished", function (blob) {
@@ -493,14 +603,13 @@ document.getElementById("gifBtn").addEventListener("click", () => {
 		link.download = "line_boil_animation.gif";
 		link.click();
 
-		statusEl.innerText = "¡GIF descargado con éxito!";
-		URL.revokeObjectURL(url); // Clean up memory
+		statusEl.innerText = translations[currentLanguage].gifSuccess;
+		URL.revokeObjectURL(url);
 	});
 
 	gif.render();
 });
-// --- THEME MANAGEMENT ---
-const themeSelect = document.getElementById("themeSelect");
+
 const rootElement = document.documentElement;
 
 function applyTheme(theme) {
@@ -510,29 +619,30 @@ function applyTheme(theme) {
 			"(prefers-color-scheme: dark)",
 		).matches;
 		resolvedTheme = prefersDark ? "dark" : "light";
-	} else {
-		resolvedTheme = theme;
 	}
 	rootElement.setAttribute("data-theme", resolvedTheme);
 	rootElement.style.colorScheme = resolvedTheme;
 	localStorage.setItem("line-boil-theme", theme);
 }
 
-themeSelect.addEventListener("change", (e) => applyTheme(e.target.value));
+themeSelect.addEventListener("change", (event) =>
+	applyTheme(event.target.value),
+);
 
-// Initialization
 const savedTheme = localStorage.getItem("line-boil-theme") || "system";
 themeSelect.value = savedTheme;
 applyTheme(savedTheme);
 
-// Listen for operating system theme changes
 window
 	.matchMedia("(prefers-color-scheme: dark)")
-	.addEventListener("change", (e) => {
+	.addEventListener("change", (event) => {
 		if (themeSelect.value === "system") {
-			const resolvedTheme = e.matches ? "dark" : "light";
+			const resolvedTheme = event.matches ? "dark" : "light";
 			rootElement.setAttribute("data-theme", resolvedTheme);
 			rootElement.style.colorScheme = resolvedTheme;
 		}
 	});
-// --- END THEME MANAGEMENT ---
+
+languageSelect.value = currentLanguage;
+applyLanguage(currentLanguage);
+updatePlaybackButtonText();
