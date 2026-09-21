@@ -60,10 +60,20 @@ canvasBgColorInput.addEventListener("input", () => {
 
 function redrawCanvases() {
 	if (loadedImage) {
-		originalCtx.clearRect(0, 0, originalCanvas.width, originalCanvas.height);
+		originalCtx.clearRect(
+			0,
+			0,
+			originalCanvas.width,
+			originalCanvas.height,
+		);
 		if (!transparentBgToggle.checked) {
 			originalCtx.fillStyle = canvasBgColorInput.value;
-			originalCtx.fillRect(0, 0, originalCanvas.width, originalCanvas.height);
+			originalCtx.fillRect(
+				0,
+				0,
+				originalCanvas.width,
+				originalCanvas.height,
+			);
 		}
 		originalCtx.drawImage(loadedImage, 0, 0);
 	}
@@ -73,7 +83,12 @@ function redrawCanvases() {
 
 		if (!transparentBgToggle.checked) {
 			previewCtx.fillStyle = canvasBgColorInput.value;
-			previewCtx.fillRect(0, 0, previewCanvas.width, previewCanvas.height);
+			previewCtx.fillRect(
+				0,
+				0,
+				previewCanvas.width,
+				previewCanvas.height,
+			);
 		}
 
 		const tempCanvas = document.createElement("canvas");
@@ -119,11 +134,13 @@ inputs.imageInput.addEventListener("change", (e) => {
 	reader.readAsDataURL(file);
 });
 
-["numFrames", "maxAmplitude", "frequency", "phaseJump", "sobelWeight"].forEach((id) => {
-	inputs[id].addEventListener("input", () => {
-		if (loadedImage) updateAllFrames();
-	});
-});
+["numFrames", "maxAmplitude", "frequency", "phaseJump", "sobelWeight"].forEach(
+	(id) => {
+		inputs[id].addEventListener("input", () => {
+			if (loadedImage) updateAllFrames();
+		});
+	},
+);
 
 document.getElementById("resetBtn").addEventListener("click", () => {
 	inputs.numFrames.value = DEFAULT_VALUES.numFrames;
@@ -137,7 +154,8 @@ document.getElementById("resetBtn").addEventListener("click", () => {
 function computeGrayscale(pixels, width, height) {
 	const gray = new Float32Array(width * height);
 	for (let i = 0; i < pixels.length; i += 4) {
-		gray[i / 4] = 0.299 * pixels[i] + 0.587 * pixels[i + 1] + 0.114 * pixels[i + 2];
+		gray[i / 4] =
+			0.299 * pixels[i] + 0.587 * pixels[i + 1] + 0.114 * pixels[i + 2];
 	}
 	return gray;
 }
@@ -183,7 +201,14 @@ function sampleBilinear(pixels, width, height, fx, fy) {
 	return result;
 }
 
-function renderBoilFrame(img, amplitude, frequency, phase, sobelWeight, targetCtx) {
+function renderBoilFrame(
+	img,
+	amplitude,
+	frequency,
+	phase,
+	sobelWeight,
+	targetCtx,
+) {
 	const w = img.width,
 		h = img.height;
 	const srcCanvas = document.createElement("canvas");
@@ -208,8 +233,10 @@ function renderBoilFrame(img, amplitude, frequency, phase, sobelWeight, targetCt
 			const weightX = Math.pow(absGx / totalGrad, sobelWeight);
 			const weightY = Math.pow(absGy / totalGrad, sobelWeight);
 
-			const waveX = amplitude * Math.sin(2 * Math.PI * y * frequency + phase);
-			const waveY = amplitude * Math.cos(2 * Math.PI * x * frequency + phase);
+			const waveX =
+				amplitude * Math.sin(2 * Math.PI * y * frequency + phase);
+			const waveY =
+				amplitude * Math.cos(2 * Math.PI * x * frequency + phase);
 
 			const srcX = clamp(x + waveX * weightX, 0, w - 1);
 			const srcY = clamp(y + waveY * weightY, 0, h - 1);
@@ -281,7 +308,8 @@ function startPreview() {
 	const intervalMs = 1000 / fps;
 
 	animationInterval = setInterval(() => {
-		currentPreviewFrame = (currentPreviewFrame + 1) % generatedFrames.length;
+		currentPreviewFrame =
+			(currentPreviewFrame + 1) % generatedFrames.length;
 		redrawCanvases();
 	}, intervalMs);
 }
@@ -353,7 +381,9 @@ document.getElementById("gifBtn").addEventListener("click", () => {
 	}
 
 	if (!gifWorkerBlobUrl) {
-		alert("El motor de GIF aún se está cargando. Intenta en unos segundos.");
+		alert(
+			"El motor de GIF aún se está cargando. Intenta en unos segundos.",
+		);
 		return;
 	}
 
@@ -383,7 +413,10 @@ document.getElementById("gifBtn").addEventListener("click", () => {
 		const tCtx = tempCanvas.getContext("2d");
 
 		if (isTransparent) {
-			const outData = tCtx.createImageData(tempCanvas.width, tempCanvas.height);
+			const outData = tCtx.createImageData(
+				tempCanvas.width,
+				tempCanvas.height,
+			);
 			for (let i = 0; i < frameData.data.length; i += 4) {
 				const alpha = frameData.data[i + 3];
 
@@ -451,7 +484,9 @@ const rootElement = document.documentElement;
 
 function applyTheme(theme) {
 	if (theme === "system") {
-		const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+		const prefersDark = window.matchMedia(
+			"(prefers-color-scheme: dark)",
+		).matches;
 		rootElement.setAttribute("data-theme", prefersDark ? "dark" : "light");
 	} else {
 		rootElement.setAttribute("data-theme", theme);
@@ -467,9 +502,14 @@ themeSelect.value = savedTheme;
 applyTheme(savedTheme);
 
 // Escuchar cambios a nivel de sistema operativo
-window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
-	if (themeSelect.value === "system") {
-		rootElement.setAttribute("data-theme", e.matches ? "dark" : "light");
-	}
-});
+window
+	.matchMedia("(prefers-color-scheme: dark)")
+	.addEventListener("change", (e) => {
+		if (themeSelect.value === "system") {
+			rootElement.setAttribute(
+				"data-theme",
+				e.matches ? "dark" : "light",
+			);
+		}
+	});
 // --- FIN GESTIÓN DE TEMA ---

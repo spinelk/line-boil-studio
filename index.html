@@ -1,172 +1,218 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Line Boil Studio</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div class="container">
-      <div class="layout">
-        <div class="controls">
-          <div class="header-bar">
-            <h1>Line Boil Studio</h1>
-            <select id="themeSelect" class="theme-select">
-              <option value="system">💻 Sistema</option>
-              <option value="light">☀️ Claro</option>
-              <option value="dark">🌙 Oscuro</option>
-            </select>
-          </div>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Line Boil Studio</title>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
+		<link rel="stylesheet" href="style.css" />
+	</head>
+	<body>
+		<div class="container">
+			<div class="layout">
+				<div class="controls">
+					<div class="header-bar">
+						<h1>Line Boil Studio</h1>
+						<select id="themeSelect" class="theme-select">
+							<option value="system">💻 Sistema</option>
+							<option value="light">☀️ Claro</option>
+							<option value="dark">🌙 Oscuro</option>
+						</select>
+					</div>
 
-          <div class="control-group">
-            <label>Imagen Entrada (PNG con transparencia recomendado)</label>
-            <input type="file" id="imageInput" accept="image/png, image/jpeg" />
-          </div>
+					<div class="control-group">
+						<label
+							>Imagen Entrada (PNG con transparencia
+							recomendado)</label
+						>
+						<input
+							type="file"
+							id="imageInput"
+							accept="image/png, image/jpeg"
+						/>
+					</div>
 
-          <div class="control-group">
-            <label>Max Amplitud <span class="limits">[0.1 - 10.0]</span></label>
-            <p class="control-desc">
-              Qué tan lejos se desplaza cada pixel de su posición original.
-            </p>
-            <input
-              type="number"
-              id="maxAmplitude"
-              value="1.5"
-              min="0.1"
-              max="10.0"
-              step="0.05"
-            />
-          </div>
+					<div class="control-group">
+						<label
+							>Max Amplitud
+							<span class="limits">[0.1 - 10.0]</span></label
+						>
+						<p class="control-desc">
+							Qué tan lejos se desplaza cada pixel de su posición
+							original.
+						</p>
+						<input
+							type="number"
+							id="maxAmplitude"
+							value="1.5"
+							min="0.1"
+							max="10.0"
+							step="0.05"
+						/>
+					</div>
 
-          <div class="control-group">
-            <label>Frecuencia <span class="limits">[0.001 - 0.5]</span></label>
-            <p class="control-desc">
-              Qué tan rápido oscila la onda a lo largo de la imagen.
-            </p>
-            <input
-              type="number"
-              id="frequency"
-              value="0.02"
-              min="0.001"
-              max="0.5"
-              step="0.005"
-            />
-          </div>
+					<div class="control-group">
+						<label
+							>Frecuencia
+							<span class="limits">[0.001 - 0.5]</span></label
+						>
+						<p class="control-desc">
+							Qué tan rápido oscila la onda a lo largo de la
+							imagen.
+						</p>
+						<input
+							type="number"
+							id="frequency"
+							value="0.02"
+							min="0.001"
+							max="0.5"
+							step="0.005"
+						/>
+					</div>
 
-          <div class="control-group">
-            <label
-              >Salto de Fase <span class="limits">[0.1 - 10.0]</span></label
-            >
-            <p class="control-desc">
-              Cuánto avanza la fase de la onda de un frame al siguiente.
-            </p>
-            <input
-              type="number"
-              id="phaseJump"
-              value="1.8"
-              min="0.1"
-              max="10.0"
-              step="0.05"
-            />
-          </div>
+					<div class="control-group">
+						<label
+							>Salto de Fase
+							<span class="limits">[0.1 - 10.0]</span></label
+						>
+						<p class="control-desc">
+							Cuánto avanza la fase de la onda de un frame al
+							siguiente.
+						</p>
+						<input
+							type="number"
+							id="phaseJump"
+							value="1.8"
+							min="0.1"
+							max="10.0"
+							step="0.05"
+						/>
+					</div>
 
-          <div class="control-group">
-            <label>Peso Sobel <span class="limits">[0.1 - 5.0]</span></label>
-            <p class="control-desc">
-              Qué tanto se concentra el desplazamiento en los bordes detectados
-              (líneas y contornos).
-            </p>
-            <input
-              type="number"
-              id="sobelWeight"
-              value="1.5"
-              min="0.1"
-              max="5.0"
-              step="0.05"
-            />
-          </div>
+					<div class="control-group">
+						<label
+							>Peso Sobel
+							<span class="limits">[0.1 - 5.0]</span></label
+						>
+						<p class="control-desc">
+							Qué tanto se concentra el desplazamiento en los
+							bordes detectados (líneas y contornos).
+						</p>
+						<input
+							type="number"
+							id="sobelWeight"
+							value="1.5"
+							min="0.1"
+							max="5.0"
+							step="0.05"
+						/>
+					</div>
 
-          <button class="btn-reset" id="resetBtn">Restaurar</button>
-        </div>
+					<button class="btn-reset" id="resetBtn">Restaurar</button>
+				</div>
 
-        <div class="canvas-column">
-          <div class="canvas-row">
-            <div class="original-box">
-              <h3>Original</h3>
-              <canvas id="originalCanvas" width="300" height="300"></canvas>
-            </div>
+				<div class="canvas-column">
+					<div class="canvas-row">
+						<div class="original-box">
+							<h3>Original</h3>
+							<canvas
+								id="originalCanvas"
+								width="300"
+								height="300"
+							></canvas>
+						</div>
 
-            <div class="preview-box">
-              <h3>Previsualizacion</h3>
-              <canvas id="previewCanvas" width="300" height="300"></canvas>
-            </div>
-          </div>
+						<div class="preview-box">
+							<h3>Previsualizacion</h3>
+							<canvas
+								id="previewCanvas"
+								width="300"
+								height="300"
+							></canvas>
+						</div>
+					</div>
 
-          <div class="options-row">
-            <div class="option-item">
-              <label for="numFrames">Frames (2-30)</label>
-              <input
-                type="number"
-                id="numFrames"
-                value="3"
-                min="1"
-                max="30"
-                step="1"
-                style="height: 2.2rem"
-              />
-            </div>
-            <div class="option-item">
-              <label for="fpsInput">FPS</label>
-              <input
-                type="number"
-                id="fpsInput"
-                value="3"
-                min="1"
-                max="60"
-                step="1"
-                style="height: 2.2rem"
-              />
-            </div>
+					<div class="options-row">
+						<div class="option-item">
+							<label for="numFrames">Frames (2-30)</label>
+							<input
+								type="number"
+								id="numFrames"
+								value="3"
+								min="1"
+								max="30"
+								step="1"
+								style="height: 2.2rem"
+							/>
+						</div>
+						<div class="option-item">
+							<label for="fpsInput">FPS</label>
+							<input
+								type="number"
+								id="fpsInput"
+								value="3"
+								min="1"
+								max="60"
+								step="1"
+								style="height: 2.2rem"
+							/>
+						</div>
 
-            <div class="option-item">
-              <label for="canvasBgColor">Color de fondo</label>
-              <input type="color" id="canvasBgColor" value="#ffffff" />
-            </div>
+						<div class="option-item">
+							<label for="canvasBgColor">Color de fondo</label>
+							<input
+								type="color"
+								id="canvasBgColor"
+								value="#ffffff"
+							/>
+						</div>
 
-            <div class="option-item">
-              <label>Transparencia</label>
-              <div class="toggle-row" style="height: 2.2rem">
-                <input
-                  type="checkbox"
-                  id="transparentBgToggle"
-                  checked
-                  style="width: 1.1rem; height: 1.1rem; cursor: pointer"
-                />
-                <span style="font-size: 0.8rem; color: var(--text)"
-                  >Activa</span
-                >
-              </div>
-            </div>
+						<div class="option-item">
+							<label>Transparencia</label>
+							<div class="toggle-row" style="height: 2.2rem">
+								<input
+									type="checkbox"
+									id="transparentBgToggle"
+									checked
+									style="
+										width: 1.1rem;
+										height: 1.1rem;
+										cursor: pointer;
+									"
+								/>
+								<span
+									style="
+										font-size: 0.8rem;
+										color: var(--text);
+									"
+									>Activa</span
+								>
+							</div>
+						</div>
 
-            <div class="option-item">
-              <label>Reproduccion</label>
-              <button class="btn-play" id="playPauseBtn">Reproducir</button>
-            </div>
-          </div>
+						<div class="option-item">
+							<label>Reproduccion</label>
+							<button class="btn-play" id="playPauseBtn">
+								Reproducir
+							</button>
+						</div>
+					</div>
 
-          <div class="btn-container">
-            <button class="btn-primary" id="zipBtn">Descargar ZIP</button>
-            <button class="btn-primary" id="gifBtn">Descargar GIF</button>
-          </div>
+					<div class="btn-container">
+						<button class="btn-primary" id="zipBtn">
+							Descargar ZIP
+						</button>
+						<button class="btn-primary" id="gifBtn">
+							Descargar GIF
+						</button>
+					</div>
 
-          <div id="status"></div>
-        </div>
-      </div>
-    </div>
+					<div id="status"></div>
+				</div>
+			</div>
+		</div>
 
-    <script src="script.js"></script>
-  </body>
+		<script src="script.js"></script>
+	</body>
 </html>
