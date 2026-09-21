@@ -499,8 +499,7 @@ document.getElementById("gifBtn").addEventListener("click", () => {
 
 	gif.render();
 });
-
-// --- GESTIÓN DE TEMA ---
+// --- THEME MANAGEMENT ---
 const themeSelect = document.getElementById("themeSelect");
 const rootElement = document.documentElement;
 
@@ -521,12 +520,12 @@ function applyTheme(theme) {
 
 themeSelect.addEventListener("change", (e) => applyTheme(e.target.value));
 
-// Inicialización
+// Initialization
 const savedTheme = localStorage.getItem("line-boil-theme") || "system";
 themeSelect.value = savedTheme;
 applyTheme(savedTheme);
 
-// Escuchar cambios a nivel de sistema operativo
+// Listen for operating system theme changes
 window
 	.matchMedia("(prefers-color-scheme: dark)")
 	.addEventListener("change", (e) => {
@@ -536,4 +535,4 @@ window
 			rootElement.style.colorScheme = resolvedTheme;
 		}
 	});
-// --- FIN GESTIÓN DE TEMA ---
+// --- END THEME MANAGEMENT ---
